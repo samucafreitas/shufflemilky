@@ -5,7 +5,7 @@
 # File              : shufflemilky.py
 # Author            : Sam Uel <samuelfreitas@linuxmail.org>
 # Date              : 30 dec 2016
-# Last Modified Date: 15 feb 2018
+# Last Modified Date: 24 jun 2018
 # Last Modified By  : Sam Uel <samuelfreitas@linuxmail.org>
 import tty
 import vlc
@@ -24,6 +24,8 @@ volume = 100
 player.audio_set_volume(volume)
 no_playlist = False
 AUDIO_FORMATS = ('.mp3', '.xm', '.mod', '.mid')
+ARROWF = '\033[35m' # magenta
+ARROWB = '\033[45m' # magenta
 
 def get_playlist():
     playlist = [file for file in glob('*') if file.endswith(AUDIO_FORMATS)]
@@ -36,15 +38,15 @@ def get_playlist():
         no_playlist = True
 
     return playlist
-        
+
 def shuffle_player():
     playlist = get_playlist()
     last_song = ''
 
     while True:
         shuffle(playlist)
-        
-        if(playlist[0] == last_song): 
+
+        if(playlist[0] == last_song):
             del playlist[0]
             playlist.append(last_song)
 
@@ -56,8 +58,8 @@ def shuffle_player():
                     player.set_media(media)
                     player.play()
                     print('\r\033[K\033[40m\033[97m\033[1m  Song '\
-                        + f'\033[m\033[30m\033[48;5;1m {path.splitext(song)[0][:28]}...'\
-                        + '\033[m\033[40m\033[38;5;1m\033[m\033[s', end='', flush=True)
+                        + f'\033[m\033[30m{ARROWB} {path.splitext(song)[0][:28]}...'\
+                        + f'\033[m\033[40m{ARROWF}\033[m\033[s', end='', flush=True)
                     on_volume()
                     break
             last_song = song
@@ -67,7 +69,7 @@ def on_volume(vol = None):
 
     if(vol):
         if(volume > 100): volume = 100
-        if(volume < 0): volume = 0 
+        if(volume < 0): volume = 0
 
         player.audio_set_volume(volume)
 
@@ -82,8 +84,8 @@ def key_pressed():
 def player_control():
     global volume
 
-    print('\033[40m\033[97m \033[1m User \033[m\033[30m\033[48;5;1m'\
-        + f'\033[30m {getuser()} \033[m\033[40m\033[38;5;1m'\
+    print(f'\033[40m\033[97m \033[1m User \033[m\033[30m{ARROWB}'\
+        + f'\033[30m {getuser()} \033[m\033[40m{ARROWF}'\
         + f'\033[40m\033[97m \033[1m {path.basename(getcwd())}'\
         + ' \033[m\033[30m\033[m\n', end='', flush=True)
     print('\033[?25l', end='', flush=True)
@@ -102,7 +104,7 @@ def player_control():
         elif(key == '.'):
             volume += 1
             on_volume(True)
-      
+
 if __name__ == '__main__':
     control_thread = Thread(target=player_control)
     player_thread = Thread(target=shuffle_player, daemon=True)
