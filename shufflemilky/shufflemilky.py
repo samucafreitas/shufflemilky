@@ -5,7 +5,7 @@
 # File              : shufflemilky.py
 # Author            : Sam Uel <samuelfreitas@linuxmail.org>
 # Date              : 30 dec 2016
-# Last Modified Date: 28 feb 2018
+# Last Modified Date: 25 nov 2018
 # Last Modified By  : Sam Uel <samuelfreitas@linuxmail.org>
 import tty
 import vlc
@@ -24,8 +24,8 @@ volume = 100
 player.audio_set_volume(volume)
 no_playlist = False
 AUDIO_FORMATS = ('.mp3', '.xm', '.mod', '.mid')
-ARROWF = '\033[35m' # magenta
-ARROWB = '\033[45m' # magenta
+ARROWF = '\033[38;5;1m' # red foreground
+ARROWB = '\033[48;5;1m' # red background
 
 def get_playlist():
     playlist = [file for file in glob('*') if file.endswith(AUDIO_FORMATS)]
@@ -57,7 +57,7 @@ def shuffle_player():
                     media = vlc_instance.media_new(song)
                     player.set_media(media)
                     player.play()
-                    print('\r\033[K\033[40m\033[97m\033[1m  Song '\
+                    print('\r\033[K\033[40m\033[97m\033[1m  '\
                         + f'\033[m\033[30m{ARROWB} {path.splitext(song)[0][:28]}...'\
                         + f'\033[m\033[40m{ARROWF}\033[m\033[s', end='', flush=True)
                     on_volume()
@@ -74,7 +74,7 @@ def on_volume(vol = None):
         player.audio_set_volume(volume)
 
     print('\033[u\033[K\033[40m\033[97m\033[1m'
-        + f'  {volume}% \033[m\033[30m\033[m', end='', flush=True)
+        + f'   {volume}% \033[m\033[30m\033[m', end='', flush=True)
 
 def key_pressed():
     tty.setcbreak(sys.stdin.fileno())
@@ -84,9 +84,9 @@ def key_pressed():
 def player_control():
     global volume
 
-    print(f'\033[40m\033[97m \033[1m User \033[m\033[30m{ARROWB}'\
+    print(f'\033[40m\033[97m \033[1m \033[m\033[30m{ARROWB}'\
         + f'\033[30m {getuser()} \033[m\033[40m{ARROWF}'\
-        + f'\033[40m\033[97m \033[1m {path.basename(getcwd())}'\
+        + f'\033[40m\033[97m  \033[1m {path.basename(getcwd())}'\
         + ' \033[m\033[30m\033[m\n', end='', flush=True)
     print('\033[?25l', end='', flush=True)
 
