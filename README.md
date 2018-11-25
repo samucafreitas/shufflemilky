@@ -6,7 +6,7 @@ Python versions:
 * Python 3.4+
 
 ```shell
-...
+pip install --user shufflemilky
 ```
 
 <b>Terminal:</b> urxvt<br>
