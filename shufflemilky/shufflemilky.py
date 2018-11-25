@@ -5,7 +5,7 @@
 # File              : shufflemilky.py
 # Author            : Sam Uel <samuelfreitas@linuxmail.org>
 # Date              : 30 dec 2016
-# Last Modified Date: 15 feb 2018
+# Last Modified Date: 28 feb 2018
 # Last Modified By  : Sam Uel <samuelfreitas@linuxmail.org>
 import tty
 import vlc
@@ -29,22 +29,22 @@ def get_playlist():
     playlist = [file for file in glob('*') if file.endswith(AUDIO_FORMATS)]
 
     if(len(playlist) == 0):
-        print('\r\033[97;5m \033[m\033[31m\033[1m'\
+        print('\r\033[5m \033[m\033[31m\033[1m'\
             + ' Songs could not be found!'\
             + ' Press q to exit.\033[m\r\033[s', end='', flush=True)
         exit(1)
         no_playlist = True
 
     return playlist
-        
+
 def shuffle_player():
     playlist = get_playlist()
     last_song = ''
 
     while True:
         shuffle(playlist)
-        
-        if(playlist[0] == last_song): 
+
+        if(playlist[0] == last_song):
             del playlist[0]
             playlist.append(last_song)
 
@@ -67,7 +67,7 @@ def on_volume(vol = None):
 
     if(vol):
         if(volume > 100): volume = 100
-        if(volume < 0): volume = 0 
+        if(volume < 0): volume = 0
 
         player.audio_set_volume(volume)
 
@@ -102,9 +102,12 @@ def player_control():
         elif(key == '.'):
             volume += 1
             on_volume(True)
-      
-if __name__ == '__main__':
+
+def main():
     control_thread = Thread(target=player_control)
     player_thread = Thread(target=shuffle_player, daemon=True)
     control_thread.start()
     player_thread.start()
+
+if __name__ == '__main__':
+    main()
