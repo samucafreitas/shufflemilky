@@ -24,6 +24,8 @@ volume = 100
 player.audio_set_volume(volume)
 no_playlist = False
 AUDIO_FORMATS = ('.mp3', '.xm', '.mod', '.mid')
+ARROWF = '\033[35m' # magenta
+ARROWB = '\033[45m' # magenta
 
 def get_playlist():
     playlist = [file for file in glob('*') if file.endswith(AUDIO_FORMATS)]
@@ -56,8 +58,8 @@ def shuffle_player():
                     player.set_media(media)
                     player.play()
                     print('\r\033[K\033[40m\033[97m\033[1m  Song '\
-                        + f'\033[m\033[30m\033[48;5;1m {path.splitext(song)[0][:28]}...'\
-                        + '\033[m\033[40m\033[38;5;1m\033[m\033[s', end='', flush=True)
+                        + f'\033[m\033[30m{ARROWB} {path.splitext(song)[0][:28]}...'\
+                        + f'\033[m\033[40m{ARROWF}\033[m\033[s', end='', flush=True)
                     on_volume()
                     break
             last_song = song
@@ -82,8 +84,8 @@ def key_pressed():
 def player_control():
     global volume
 
-    print('\033[40m\033[97m \033[1m User \033[m\033[30m\033[48;5;1m'\
-        + f'\033[30m {getuser()} \033[m\033[40m\033[38;5;1m'\
+    print(f'\033[40m\033[97m \033[1m User \033[m\033[30m{ARROWB}'\
+        + f'\033[30m {getuser()} \033[m\033[40m{ARROWF}'\
         + f'\033[40m\033[97m \033[1m {path.basename(getcwd())}'\
         + ' \033[m\033[30m\033[m\n', end='', flush=True)
     print('\033[?25l', end='', flush=True)
